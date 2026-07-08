@@ -46,7 +46,7 @@ def test_expected_failure():
     assert 1 == 2
 
 
-@pytest.mark.skip(reason="Example skipped test for lab requirement")
+@pytest.mark.skipif(True, reason="Example skipif test for lab requirement")
 def test_skipped_future_test():
     assert False
 

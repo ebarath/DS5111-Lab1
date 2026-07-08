@@ -66,4 +66,3 @@ def test_extract_transcripts_handles_fetch_failure(
     captured_output = capsys.readouterr()
 
     assert captured_output.out.strip() == ""
-

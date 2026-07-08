@@ -1,0 +1,58 @@
+name: Continuous Integration Quality Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint:
+    name: Code Quality Inspection
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Bootstrap Environment
+        run: make env
+
+      - name: Install Runtime Dependencies
+        run: make update
+
+      - name: Execute Linter Quality Gate
+        run: make lint
+
+  test:
+    name: Unit Testing Engine
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Bootstrap Environment
+        run: make env
+
+      - name: Install Runtime Dependencies
+        run: make update
+
+      - name: Execute Automated Test Suite
+        run: make test
