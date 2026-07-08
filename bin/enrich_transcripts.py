@@ -75,4 +75,3 @@ raw_text: {record.get("raw_text")}
 
 if __name__ == "__main__":
     main()
-
