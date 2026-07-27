@@ -8,6 +8,17 @@ import sys
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from abc import ABC, abstractmethod
+
+class LLMStrategy(ABC):
+    """Define the interface for transcript enrichment strategies."""
+
+    @abstractmethod
+    def enrich(self, transcript_record: dict) -> dict:
+        """Enrich one transcript record and return the resulting record."""
+        raise NotImplementedError
+
+
 
 
 def main():
