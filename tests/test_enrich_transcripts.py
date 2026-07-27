@@ -2,7 +2,7 @@ import sys
 import io
 import json
 import pytest
-from bin.enrich_transcripts import main
+from bin.enrich_transcripts import LLMStrategy, TranscriptEnricher, main
 
 # 1. Build a dummy container mimicking the Gemini SDK response hierarchy
 class MockGeminiResponse:
@@ -46,3 +46,36 @@ def test_enrich_transcripts_streaming_pipeline(monkeypatch, capsys):
     parsed_output = json.loads(stdout_lines[0])
     assert parsed_output["video_id"] == "ds5111_v001"
     assert "mock frameworks" in parsed_output["tech_terms"]
+
+
+class MockLLMStrategy(LLMStrategy):
+    """Mock strategy used to test the pipeline orchestrator."""
+
+    def enrich(self, transcript_record):
+        return {
+            "video_id": transcript_record["video_id"],
+            "cleaned_text": "mock cleaned text",
+            "tech_terms": ["python"],
+            "book_names": [],
+        }
+
+
+def test_transcript_enricher_orchestrator():
+    """Verify the orchestrator works with an injected mock strategy."""
+    input_record = {
+        "video_id": "abc123",
+        "raw_text": "hello world",
+    }
+
+    input_stream = io.StringIO(json.dumps(input_record) + "\n")
+    output_stream = io.StringIO()
+
+    enricher = TranscriptEnricher(MockLLMStrategy())
+    enricher.process_stream(input_stream, output_stream)
+
+    result = json.loads(output_stream.getvalue())
+
+    assert result["video_id"] == "abc123"
+    assert result["cleaned_text"] == "mock cleaned text"
+    assert result["tech_terms"] == ["python"]
+    assert result["book_names"] == []
