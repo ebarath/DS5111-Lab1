@@ -42,3 +42,4 @@ typing_extensions==4.15.0
 urllib3==2.7.0
 websockets==16.0
 youtube-transcript-api==1.2.4
+snowflake-connector-python==4.7.1
