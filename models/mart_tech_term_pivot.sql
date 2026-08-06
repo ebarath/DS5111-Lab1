@@ -6,7 +6,7 @@ SELECT
     video_id,
 
 {% for term in core_terms %}
-SUM(CASE WHEN LOWER(term_name)='{{ term }}' THEN 1 ELSE 0 END)
+SUM(CASE WHEN LOWER(tech_term)='{{ term }}' THEN 1 ELSE 0 END)
 AS count_{{ term }}_mentions
 {% if not loop.last %},{% endif %}
 {% endfor %}
